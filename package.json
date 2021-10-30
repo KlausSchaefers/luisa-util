@@ -1,0 +1,44 @@
+{
+  "name": "luisa-util",
+  "version": "1.0.3",
+  "description": "Luisa util to download FigmaFiles or Quant-UX files.",
+  "main": "lib/index.js",
+  "scripts": {
+    "build": "babel -d lib/ src",
+    "start": "babel-node src/index.js",
+    "test": "jest",
+    "test_compile": "babel-node src/index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/KlausSchaefers/luisa-util.git"
+  },
+  "keywords": [
+    "Figma",
+    "LowCode",
+    "Luisa",
+    "Vue"
+  ],
+  "author": "Klaus Schaefers",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/KlausSchaefers/luisa-util/issues"
+  },
+  "homepage": "https://github.com/KlausSchaefers/luisa-util#readme",
+  "dependencies": {
+    "chalk": "^4.1.2",
+    "inquirer": "^8.2.0",
+    "node-fetch": "^2.6.0"
+  },
+  "devDependencies": {
+    "@babel/cli": "^7.16.0",
+    "@babel/core": "^7.16.0",
+    "@babel/node": "^7.16.0",
+    "@babel/plugin-transform-runtime": "^7.16.0",
+    "@babel/preset-env": "^7.16.0"
+  },
+  "engines": {
+    "node": "10.10.0",
+    "npm": "6.4.1"
+  }
+}
