@@ -5,7 +5,7 @@ import {prompt} from 'inquirer';
 import chalk from 'chalk';
 import fetch from 'node-fetch';
 import util from 'util'
-
+import crypto from 'crypto'
 /**
  * Enable fetch polyfill
  */
@@ -18,7 +18,7 @@ Logger.setLogLevel(-10)
 
 async function download(confFile = './.luisa') {
     console.debug(chalk.blue('---------------------------------------'))
-    console.debug(chalk.blue(' Luisa Downlaoder - v. 1.0.3'))
+    console.debug(chalk.blue(' Luisa Downloader - v. 1.0.4'))
     console.debug(chalk.blue('---------------------------------------'))
     let defaultConf = read_config(confFile)
     const config = await ask_conf(defaultConf)
@@ -149,7 +149,7 @@ function get_images(model) {
 }
 
 function write_app(app, jsonFileTarget) {
-    console.debug(chalk.blue('  - Write Design: ' + jsonFileTarget))
+    console.debug(chalk.blue('Write Design: ' + jsonFileTarget))
     var content = JSON.stringify(app, null, 2)
     fs.writeFileSync(jsonFileTarget, content)
 }
@@ -163,13 +163,7 @@ async function download_figma(figmaAccessKey, figmaFileId, figmaPageId, jsonFile
 
     return new Promise((resolve, reject) => {
       
-
         var selectedPages = figmaPageId ? figmaPageId.split(',') : []
-        /**
-         * Start downloading
-         */
-     
-        
         const figmaService = new FigmaService(figmaAccessKey)
         console.debug(chalk.blue('Download Figma file...'))
         if (figmaPageId) {
@@ -201,7 +195,10 @@ async function download_figma(figmaAccessKey, figmaFileId, figmaPageId, jsonFile
                 }
                 })
                 await Promise.all(promisses)
+
+                await optimizeImages(widgetsWithImages, fileFolderTarget)
                 write_app(app, jsonFileTarget)
+
             
                 console.debug(`\n\n`)
                 console.debug(chalk.green('Done!'), 'Now import the JSON file in', chalk.green('Home.vue'))
@@ -213,6 +210,63 @@ async function download_figma(figmaAccessKey, figmaFileId, figmaPageId, jsonFile
         }
     })
 }
+
+async function optimizeImages(images, fileFolderTarget) {
+    console.debug(chalk.blue('Optimize images() image: ' + images.length))
+
+    let fileCheckSums = {}
+    for (let i=0; i < images.length; i++) {
+        let img = images[i]
+        let fileName = fileFolderTarget + '/' + img.style.backgroundImage.url
+        let checkSum = await createChecksum(fileName)
+        if (checkSum ) {
+            if (!fileCheckSums[checkSum]) {
+                fileCheckSums[checkSum] = []
+            }
+            fileCheckSums[checkSum].push(img)
+        }     
+    }
+    for (let checkSum in fileCheckSums) {
+        let filesWithSameChecksum = fileCheckSums[checkSum]
+        if (filesWithSameChecksum.length > 1) {
+            let first = filesWithSameChecksum[0]
+
+            /**
+             * Replace the background for all others and delete the files
+             */
+            for (let i = 1; i < filesWithSameChecksum.length; i++) {
+                let other = filesWithSameChecksum[i]
+                let fileName = fileFolderTarget + '/' + other.style.backgroundImage.url              
+                fs.unlinkSync(fileName)
+                other.style.backgroundImage = first.style.backgroundImage
+                console.debug(chalk.blueBright('  -  Replace duplicate '), chalk.gray(fileName))
+            }
+        }
+    }
+    
+}
+
+
+function createChecksum(path) {
+    return new Promise(function (resolve, reject) {
+        try {
+            const hash = crypto.createHash('md5');
+            const input = fs.createReadStream(path);
+        
+            input.on('error', reject);
+        
+            input.on('data', function (chunk) {
+              hash.update(chunk);
+            });
+        
+            input.on('close', function () {
+              resolve(hash.digest('hex'));
+            });
+        } catch (err) {
+            resolve(null)
+        }     
+    });
+  }
 
 async function ask_figma(defaultConf) {
     const questions = [
