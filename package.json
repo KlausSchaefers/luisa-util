@@ -1,6 +1,6 @@
 {
   "name": "luisa-util",
-  "version": "1.0.4",
+  "version": "1.0.9",
   "description": "Luisa util to download FigmaFiles or Quant-UX files.",
   "main": "lib/index.js",
   "scripts": {
@@ -27,7 +27,6 @@
   "homepage": "https://github.com/KlausSchaefers/luisa-util#readme",
   "dependencies": {
     "chalk": "^4.1.2",
-    "crypto": "^1.0.1",
     "inquirer": "^8.2.0",
     "node-fetch": "^2.6.6"
   },
@@ -37,9 +36,5 @@
     "@babel/node": "^7.16.0",
     "@babel/plugin-transform-runtime": "^7.16.0",
     "@babel/preset-env": "^7.16.0"
-  },
-  "engines": {
-    "node": "10.10.0",
-    "npm": "6.4.1"
   }
 }

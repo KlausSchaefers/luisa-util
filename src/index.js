@@ -18,7 +18,7 @@ Logger.setLogLevel(-10)
 
 async function download(confFile = './.luisa') {
     console.debug(chalk.blue('---------------------------------------'))
-    console.debug(chalk.blue(' Luisa Downloader - v. 1.0.4'))
+    console.debug(chalk.blue(' Luisa Downloader - v. 1.0.9'))
     console.debug(chalk.blue('---------------------------------------'))
     let defaultConf = read_config(confFile)
     const config = await ask_conf(defaultConf)
