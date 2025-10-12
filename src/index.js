@@ -18,7 +18,7 @@ Logger.setLogLevel(-10)
 
 async function download(confFile = './.luisa') {
     console.debug(chalk.blue('---------------------------------------'))
-    console.debug(chalk.blue(' Luisa Downloader - v. 1.0.9'))
+    console.debug(chalk.blue(' Luisa Downloader - v. 1.0.11'))
     console.debug(chalk.blue('---------------------------------------'))
     let defaultConf = read_config(confFile)
     const config = await ask_conf(defaultConf)
@@ -92,7 +92,7 @@ async function ask_qux(defaultConf){
     return answers
 }
 
-async function download_qux(quxToken, jsonFileTarget, fileFolderTarget, quxServer = 'https://quant-ux.com') {
+async function download_qux(quxToken, jsonFileTarget, fileFolderTarget, quxServer = 'https://app.quant-ux.com') {
 
     return new Promise(async (resolve, reject) => {
         let url = `${quxServer}/rest/invitation/${quxToken}/app.json`
